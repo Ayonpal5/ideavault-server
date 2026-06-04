@@ -172,5 +172,14 @@ app.put('/api/auth/profile', auth, (req,res)=>{
   res.json(updated)
 })
 
+// Serve client static files if present (for single-repo deployment)
+const publicDir = path.join(__dirname, 'public')
+if (fs.existsSync(publicDir)) {
+  app.use(express.static(publicDir))
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(publicDir, 'index.html'))
+  })
+}
+
 const port = process.env.PORT || 5000
 app.listen(port, ()=>console.log('Server running on', port))
